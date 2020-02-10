@@ -86,6 +86,7 @@ class InstaBot:
         :return: list of usersID which you followed
         """
         assert len(your_followers) >= 1, 'users not found'
+        api = self.api
 
         user = np.random.choice(your_followers, 1)[0]
         his_followers = api.getTotalFollowers(user['pk'])
