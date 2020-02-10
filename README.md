@@ -3,3 +3,24 @@
 # InstagramBot
 
 A couple of functions which automize your work on instagram. You can follow/unfollow people, like or post etc. Collect information and statistic for your data analysis.
+
+
+### Class InstaBot
+
+functions
+
+ - get_profile_details: return basic information about user with usernameID in pandas DataFrame.
+ If usernameID == 1 it returns your profile.
+ - get followers: return all who follow 'username'
+ - get_followings: returns everyone 'username' follow
+ - auto_sub: auto subscriber
+ - auto_unsub: auto unsubscriber
+ - give_like: likes random posts from the feed
+
+ Delay in a loop functions has a random number from 15 to 45 seconds on each iteration
+
+ # TODO
+ - [ ] Think about extra functions
+ - [ ] Test current functionality
+ - [ ] Make telegram bot and run it on the server
+ - [ ] Put this class into .py module
