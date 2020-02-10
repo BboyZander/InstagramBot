@@ -27,3 +27,4 @@ functions
  - [ ] add stop list for each function to avoid some users
  - [ ] add check for username if there are several accounts, when you search with nickname
  - [ ] add filter for list of foloowers to avoid business  and spam accounts
+ - [ ] change delay to avoid blocks from Instagram api (set from 30 to 50)
