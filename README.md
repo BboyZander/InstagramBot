@@ -23,4 +23,6 @@ functions
  - [ ] Think about extra functions
  - [ ] Test current functionality
  - [ ] Make telegram bot and run it on the server
- - [ ] Put this class into .py module
+ - [x] Put this class into .py module
+ - [ ] add stop list for each function to avoid some users
+ - [ ] add check for username if there are several accounts, when you search with nickname
