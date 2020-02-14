@@ -12,11 +12,26 @@ from InstagramAPI import InstagramAPI
 class InstaBot:
     def __init__(self, username, password):
         self.api = InstagramAPI(username, password)
-
+        
+        self.username = username
         api = self.api
         api.USER_AGENT = 'Instagram 10.34.0 Android (18/4.3; 320dpi; 720x1280; Xiaomi; HM lSW; armani; qcom; en_US)'
         api.login()
+        
 
+    def get_userID(self, username):
+        """
+        asd
+        """
+        api = self.api
+        
+        api.searchUsername(username)
+        result = api.LastJson
+        
+        return result['user']['pk']
+        
+        return usernameID
+    
     def get_profile_details(self, usernameID=1, savefile=''):
         """
         :param usernameID: ID, if ID == 1, return information about your profile
@@ -58,11 +73,10 @@ class InstaBot:
     def get_followers(self, username):
         """
         :param username: nickname from instagram
-        :return: list of users who follow you
+        :return: list of your followers
         """
         api = self.api
 
-        api.login()
         api.searchUsername(username)
         r = api.LastJson
         return api.getTotalFollowers(r['user']['pk'])
@@ -70,40 +84,74 @@ class InstaBot:
     def get_followings(self, username):
         """
         :param username: nickname from instagram
-        :return: list of users who you follow
+        :return: list of your followings
         """
         api = self.api
 
-        api.login()
         api.searchUsername(username)
         r = api.LastJson
         return api.getTotalFollowings(r['user']['pk'])
-
-    def auto_sub(self, your_followers, cnt=10):
+    
+    def filtering(self, list_for_fliter, threshold=2000 ,by='followers'):
         """
-        :param your_followers: list of your followers
+        by = 'followers' or 'following'
+        """
+        api = self.api
+
+        filtered = []
+        threshold = 2000 #expert estimation
+        if by == 'followers':
+            for i in tqdm(list_for_fliter):
+                api.searchUsername(i['username'])
+                if api.LastJson['user']['follower_count'] < threshold:
+                    filtered.append(i)
+        elif by == 'following':
+            for i in tqdm(list_for_fliter):
+                api.searchUsername(i['username'])
+                if api.LastJson['user']['following_count'] < threshold//4:
+                    filtered.append(i)
+        return filtered
+
+    def auto_sub(self, username, from_ = 'followers', cnt=10, threshold_for_filtering = 2000):
+        """
+        :param username: nickname from instagram
+        :param from_: 'followers' or 'following'
         :param cnt: count of users to follow
         :return: list of usersID which you followed
         """
-        assert len(your_followers) >= 1, 'users not found'
+        from_ = from_.lower()
+        assert isinstance(username, str), 'incorrect type of username'
+        assert from_ in ['followers', 'following'], 'incorrect, choose from followers/ following'
+
+
         api = self.api
+        my_username = self.username
+        
+        if from_ == 'followers':
+            to_choose = self.get_followers(username)
+        
+        if from_ == 'following':
+            to_choose = self.get_folowings(username)
+        
+        
+        to_follow = np.random.choice(to_choose, cnt)
+        to_follow_filtered = self.filtering(to_follow, by=from_, threshold = threshold_for_filtering)
+        to_follow_filtered_id = [i['pk'] for i in to_follow_filtered]
 
-        user = np.random.choice(your_followers, 1)[0]
-        his_followers = api.getTotalFollowers(user['pk'])
-
-        to_follow = [i['pk'] for i in np.random.choice(his_followers, cnt)]
+        your_followers = self.get_followers(my_username)
         your_followers_id = [i['pk'] for i in your_followers]
-        to_follow = list(set(to_follow) - set(your_followers_id))
+        
+        to_follow_final = list(set(to_follow_filtered_id) - set(your_followers_id))
 
-        for user in tqdm(to_follow):
+        for user in tqdm(to_follow_final):
             api.follow(user)
-            sleep(np.random.randint(15, 45))
+            sleep(np.random.randint(35, 60))
 
         curr_date = str(datetime.datetime.now().date()).replace('-', '_')
         with open('followed_' + curr_date + '.pickle', 'wb') as f:
             pickle.dump(to_follow, f)
 
-        return to_follow
+        return to_follow_filtered
 
     def auto_unsab(self, username, follower_PATH):
         """
@@ -124,7 +172,8 @@ class InstaBot:
 
         for user in tqdm(to_unsab):
             api.unfollow(user)
-            sleep(np.random.randint(15, 45))
+            sleep(np.random.randint(5, 10))
+
 
         return 'Done!'
 
@@ -135,13 +184,13 @@ class InstaBot:
         :return: 'all likes are given out'
         """
         api = self.api
-        for user in tqdm(userIDs):
+        for user in userIDs:
             api.getUserFeed(user)
             feed = api.LastJson['items']
             feedIDs = [i['pk'] for i in feed]
             random_feed = np.random.choice(feedIDs, cnt_likes)
-            for feedID in random_feed:
+            for feedID in tqdm(random_feed):
                 api.like(int(feedID))
-                sleep(np.random.randint(15, 45))
+                sleep(np.random.randint(5, 15))
 
         return 'all likes are given out'
