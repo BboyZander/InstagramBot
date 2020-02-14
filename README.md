@@ -9,8 +9,8 @@ A couple of functions which automize your work on instagram. You can follow/unfo
 
 functions
 
- - get_profile_details: return basic information about user with usernameID in pandas DataFrame.
- If usernameID == 1 it returns your profile.
+ - get_userID: return user id instead of you nickname
+ - get_profile_details: return basic information about user with usernameID in pandas DataFrame. If usernameID == 1 it returns your profile.
  - get followers: return all who follow 'username'
  - get_followings: returns everyone 'username' follow
  - auto_sub: auto subscriber
@@ -21,10 +21,10 @@ functions
 
  # TODO
  - [ ] Think about extra functions
- - [ ] Test current functionality
+ - [x] Test current functionality
  - [ ] Make telegram bot and run it on the server
  - [x] Put this class into .py module
  - [ ] add stop list for each function to avoid some users
  - [ ] add check for username if there are several accounts, when you search with nickname
  - [ ] add filter for list of foloowers to avoid business  and spam accounts
- - [ ] change delay to avoid blocks from Instagram api (set from 30 to 50)
+ - [x] change delay to avoid blocks from Instagram api (set from 30 to 50)
