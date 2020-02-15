@@ -12,31 +12,29 @@ from InstagramAPI import InstagramAPI
 class InstaBot:
     def __init__(self, username, password):
         self.api = InstagramAPI(username, password)
-        
+
         self.username = username
         api = self.api
         api.USER_AGENT = 'Instagram 10.34.0 Android (18/4.3; 320dpi; 720x1280; Xiaomi; HM lSW; armani; qcom; en_US)'
         api.login()
-        
 
     def get_userID(self, username):
         """
-        asd
+        :param username: nickname from instagram
+        :return: its user ID
         """
         api = self.api
-        
+
         api.searchUsername(username)
         result = api.LastJson
-        
+
         return result['user']['pk']
-        
-        return usernameID
-    
+
     def get_profile_details(self, usernameID=1, savefile=''):
         """
-        :param usernameID: ID, if ID == 1, return information about your profile
-        :param savefile: path for file without its name. The name will be /profile_usernameID.csv, sep=\t
-        :return: df with usernameID info such as nickname, full_name, profile_pic_url, follower_count, following_count and media_count
+        :param usernameID: ID, if ID == 1, return information about your profile :param savefile: path for file
+        without its name. The name will be /profile_usernameID.csv, sep=\t :return: df with usernameID info such as
+        nickname, full_name, profile_pic_url, follower_count, following_count and media_count
         """
         api = self.api
 
@@ -91,15 +89,14 @@ class InstaBot:
         api.searchUsername(username)
         r = api.LastJson
         return api.getTotalFollowings(r['user']['pk'])
-    
-    def filtering(self, list_for_fliter, threshold=2000 ,by='followers'):
+
+    def filtering(self, list_for_fliter, threshold=2000, by='followers'):
         """
         by = 'followers' or 'following'
         """
         api = self.api
 
         filtered = []
-        threshold = 2000 #expert estimation
         if by == 'followers':
             for i in tqdm(list_for_fliter):
                 api.searchUsername(i['username'])
@@ -108,11 +105,11 @@ class InstaBot:
         elif by == 'following':
             for i in tqdm(list_for_fliter):
                 api.searchUsername(i['username'])
-                if api.LastJson['user']['following_count'] < threshold//4:
+                if api.LastJson['user']['following_count'] < threshold // 4:
                     filtered.append(i)
         return filtered
 
-    def auto_sub(self, username, from_ = 'followers', cnt=10, threshold_for_filtering = 2000):
+    def auto_sub(self, username, from_='followers', cnt=10, threshold_for_filtering=2000):
         """
         :param username: nickname from instagram
         :param from_: 'followers' or 'following'
@@ -123,24 +120,22 @@ class InstaBot:
         assert isinstance(username, str), 'incorrect type of username'
         assert from_ in ['followers', 'following'], 'incorrect, choose from followers/ following'
 
-
         api = self.api
         my_username = self.username
-        
+
         if from_ == 'followers':
             to_choose = self.get_followers(username)
-        
+
         if from_ == 'following':
             to_choose = self.get_folowings(username)
-        
-        
+
         to_follow = np.random.choice(to_choose, cnt)
-        to_follow_filtered = self.filtering(to_follow, by=from_, threshold = threshold_for_filtering)
+        to_follow_filtered = self.filtering(to_follow, by=from_, threshold=threshold_for_filtering)
         to_follow_filtered_id = [i['pk'] for i in to_follow_filtered]
 
         your_followers = self.get_followers(my_username)
         your_followers_id = [i['pk'] for i in your_followers]
-        
+
         to_follow_final = list(set(to_follow_filtered_id) - set(your_followers_id))
 
         for user in tqdm(to_follow_final):
@@ -173,7 +168,6 @@ class InstaBot:
         for user in tqdm(to_unsab):
             api.unfollow(user)
             sleep(np.random.randint(5, 10))
-
 
         return 'Done!'
 
