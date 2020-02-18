@@ -20,11 +20,9 @@ functions
  Delay in a loop functions has a random number from 15 to 45 seconds on each iteration
 
  # TODO
- - [ ] Think about extra functions
- - [x] Test current functionality
  - [ ] Make telegram bot and run it on the server
+ - [ ] autorename files for soving
  - [x] Put this class into .py module
- - [ ] add stop list for each function to avoid some users
- - [ ] add check for username if there are several accounts, when you search with nickname
- - [ ] add filter for list of foloowers to avoid business  and spam accounts
+ - [ ] Stop list for each function to avoid some users
+ - [ ] add filter for list of followers to avoid business  and spam accounts
  - [x] change delay to avoid blocks from Instagram api (set from 30 to 50)
