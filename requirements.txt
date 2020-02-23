@@ -3,6 +3,3 @@ InstagramAPI
 pandas
 numpy
 tqdm
-time
-datetime
-pickle
