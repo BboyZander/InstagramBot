@@ -3,3 +3,4 @@ InstagramAPI
 pandas
 numpy
 tqdm==4.11.2
+requests==2.11.1
