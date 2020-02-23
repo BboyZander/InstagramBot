@@ -1,5 +1,6 @@
 import telebot
 import os
+from InstaBot import InstaBot
 
 
 class TokenException(Exception):
@@ -15,8 +16,10 @@ except KeyError:
     except FileNotFoundError:
         raise TokenException("Can't find token file for connection")
 
-# init bot
+# init telegram bot
 tbot = telebot.TeleBot(TOKEN)
+# init instagram bot
+ibot = InstaBot()
 
 
 # Create basic func
@@ -28,6 +31,11 @@ def send_welcome(message):
 @tbot.message_handler(func=lambda message: True)
 def echo_all(message):
     tbot.reply_to(message, message.text)
+
+
+@tbot.message_handler(commands=['connect'])
+def instabot(message):
+    tbot.reply_to(message, 'Enter your login')
 
 
 tbot.polling()

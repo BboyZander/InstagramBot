@@ -10,7 +10,13 @@ from InstagramAPI import InstagramAPI
 
 
 class InstaBot:
-    def __init__(self, username, password):
+    def __init__(self):
+        pass
+
+    def connect(self, username, password):
+        """
+        connect to your instagram account
+        """
         self.api = InstagramAPI(username, password)
 
         self.username = username
