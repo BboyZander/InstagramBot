@@ -35,7 +35,11 @@ def echo_all(message):
 
 @tbot.message_handler(commands=['connect'])
 def instabot(message):
-    tbot.reply_to(message, 'Enter your login')
+    tbot.message_handler('Write your log pas')
+    data = message.text
+    username = data.split(' ')[0]
+    password = data.split(' ')[1]
+    tbot.message_handler(f'well your username {username} and pass {password}')
 
 
 tbot.polling()
