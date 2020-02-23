@@ -30,7 +30,11 @@ def send_welcome(message):
 
 @tbot.message_handler(func=lambda message: True)
 def echo_all(message):
+    chat_id = message.chat.id
+    tbot.send_message(chat_id, 'write login pas')
+
     tbot.reply_to(message, message.text)
+
 
 
 @tbot.message_handler(commands=['connect'])
